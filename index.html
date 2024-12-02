@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notion Timer</title>
+    <style>
+        body {
+            font-family: "Sans-serif workhorse", sans-serif;
+            background-color: transparent;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .timer {
+            width: 180px;
+            height: 180px;
+            border-radius: 12px;
+            background-color: #262626;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+        }
+
+        .display {
+            font-size: 4.2em;
+            color: #fff;
+            margin-bottom: 2px;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 5px;
+            margin-bottom: 1px;
+        }
+
+        .buttons button {
+            padding: 8px 12px;
+            margin: 1px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+            border: none;
+            border-radius: 10px;
+            background-color: #444;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.62em;
+        }
+
+        .buttons button.large {
+            font-size: 0.62em;
+        }
+
+        .buttons button:hover {
+            opacity: 0.8;
+        }
+
+        .buttons button:active {
+            opacity: 0.8;
+        }
+
+        .buttons button:disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        .buttons button.highlighted {
+            background-color: #2f2f2f;
+        }
+
+        #cancel {
+            padding: 8px 12px;
+            margin: 1px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+            border: none;
+            border-radius: 10px;
+            background-color: #444;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.62em;
+        }
+
+        #cancel:hover {
+            opacity: 0.8;
+        }
+
+        #cancel:active {
+            opacity: 0.8;
+        }
+
+        #cancel:disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        @keyframes flash {
+            0% { background-color: #262626; }
+            50% { background-color: #fff; }
+            100% { background-color: #262626; }
+        }
+
+        .overlay-text {
+            font-size: 0.5em;
+            color: rgba(255, 255, 255, 0.3);
+            text-align: center;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 0.5; }
+        }
+
+        #theme-switch {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 30px;
+            height: 15px;
+            background-color: #555;
+            border-radius: 15px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #theme-switch::before {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #fff;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        #theme-switch.light {
+            background-color: #aaa;
+        }
+
+        #theme-switch.light::before {
+            transform: translateX(15px);
+        }
+
+        .timer:hover #theme-switch {
+            opacity: 1;
+        }
+
+        /* Light Theme Styles */
+        .timer.light-theme {
+            background-color: #e7e7e7;
+        }
+
+        .timer.light-theme .display {
+            color: #262626;
+        }
+
+        .timer.light-theme .buttons button {
+            background-color: #dadada;
+            color: #757575;
+            opacity: 0.7;
+        }
+
+        .timer.light-theme #cancel {
+            background-color: #dadada;
+            color: #757575;
+        }
+
+        .timer.light-theme .buttons button:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div class="timer" id="timer">
+    <div class="display" id="timerDisplay">25:00</div>
+    <div class="buttons">
+        <button id="minus" onmousedown="startAdjustTime(-60)" onmouseup="stopAdjustTime()" class="large">-</button>
+        <button id="start" onclick="toggleTimer()" class="large">Start</button>
+        <button id="plus" onmousedown="startAdjustTime(60)" onmouseup="stopAdjustTime()" class="large">+</button>
+    </div>
+    <div class="buttons">
+        <button id="shortBreak" onclick="setShortBreak()">Short Break</button>
+        <button id="longBreak" onclick="setLongBreak()">Long Break</button>
+    </div>
+    <div class="buttons">
+        <button id="cancel" onclick="cancelTimer()">Cancel</button>
+        <div id="theme-switch" onclick="toggleTheme()"></div>
+    </div>
+</div>
+
+<script>
+    let timer;
+    let time = 1500;
+    let isRunning = false;
+    let adjustTimerInterval;
+    let isDarkTheme = true;
+
+    // Play Sound
+    function playAlarmSound() {
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playChime(frequency, duration, startTime) {
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+
+            oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime + startTime);
+            gainNode.gain.setValueAtTime(0.5, audioContext.currentTime + startTime);
+
+            oscillator.start(audioContext.currentTime + startTime);
+            gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + startTime + duration);
+            oscillator.stop(audioContext.currentTime + startTime + duration);
+        }
+
+        playChime(550, 0.2, 0);
+        playChime(550, 0.5, 0.3);
+    }
+
+    function toggleTheme() {
+        const timer = document.getElementById('timer');
+        const themeSwitch = document.getElementById('theme-switch');
+        
+        isDarkTheme = !isDarkTheme;
+        timer.classList.toggle('light-theme');
+        themeSwitch.classList.toggle('light');
+    }
+
+    function startAdjustTime(seconds) {
+        adjustTime(seconds);
+        adjustTimerInterval = setInterval(function() {
+            adjustTime(seconds);
+        }, 100);
+    }
+
+    function stopAdjustTime() {
+        clearInterval(adjustTimerInterval);
+    }
+
+    function toggleTimer() {
+        if (!isRunning) {
+            isRunning = true;
+            timer = setInterval(updateTimer, 1000);
+            document.getElementById('start').innerText = 'Pause';
+        } else {
+            isRunning = false;
+            clearInterval(timer);
+            document.getElementById('start').innerText = 'Resume';
+        }
+    }
+
+    function cancelTimer() {
+        clearInterval(timer);
+        time = 0;
+        isRunning = false;
+        document.getElementById('timerDisplay').innerText = formatTime(time);
+        document.getElementById('start').innerText = 'Start';
+    }
+
+    function updateTimer() {
+        if (time > 0) {
+            time--;
+            document.getElementById('timerDisplay').innerText = formatTime(time);
+        } else if (time === 0) {
+            clearInterval(timer);
+            isRunning = false;
+            document.getElementById('start').innerText = 'Start';
+            playAlarmSound();
+        }
+    }
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remainingSeconds = seconds % 60;
+        return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+    }
+
+    function adjustTime(seconds) {
+        time += seconds;
+        if (time < 0) {
+            time = 0;
+        }
+        document.getElementById('timerDisplay').innerText = formatTime(time);
+        
+        if (time > 0) {
+            document.getElementById('start').removeAttribute('disabled');
+        } else {
+            document.getElementById('start').setAttribute('disabled', 'disabled');
+        }
+    }
+
+    function setShortBreak() {
+        time = 300;
+        document.getElementById('timerDisplay').innerText = formatTime(time);
+        document.getElementById('start').removeAttribute('disabled');
+    }
+
+    function setLongBreak() {
+        time = 900;
+        document.getElementById('timerDisplay').innerText = formatTime(time);
+        document.getElementById('start').removeAttribute('disabled');
+    }
+
+    function stopFlash() {
+        document.getElementById('overlay').style.animation = 'fadeOut 0.5s ease-out';
+        setTimeout(function() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('timer').style.display = 'flex';
+        }, 500);
+    }
+</script>
+</body>
+</html>
