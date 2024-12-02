@@ -185,8 +185,9 @@
         <button id="plus" onmousedown="startAdjustTime(60)" onmouseup="stopAdjustTime()" class="large">+</button>
     </div>
     <div class="buttons">
-        <button id="shortBreak" onclick="setShortBreak()">Short Break</button>
-        <button id="longBreak" onclick="setLongBreak()">Long Break</button>
+        <button id="shortBreak" onclick="setShortBreak()">5 min</button>
+        <button id="longBreak" onclick="setLongBreak()">15 min</button>
+        <button id="25" onclick="set25min()">25 min</button>
     </div>
     <div class="buttons">
         <button id="cancel" onclick="cancelTimer()">Cancel</button>
@@ -335,14 +336,13 @@
         document.getElementById('timerDisplay').innerText = formatTime(time);
         document.getElementById('start').removeAttribute('disabled');
     }
-
-    function stopFlash() {
-        document.getElementById('overlay').style.animation = 'fadeOut 0.5s ease-out';
-        setTimeout(function() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('timer').style.display = 'flex';
-        }, 500);
+  
+  function set25min() {
+        time = 1500;
+        document.getElementById('timerDisplay').innerText = formatTime(time);
+        document.getElementById('start').removeAttribute('disabled');
     }
+
 </script>
 </body>
 </html>
