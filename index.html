@@ -71,7 +71,7 @@
         }
 
         .buttons button:disabled {
-            opacity: 0.8;
+            opacity: 0.3;
             pointer-events: none;
         }
 
@@ -101,7 +101,7 @@
         }
 
         #cancel:disabled {
-            opacity: 0.8;
+            opacity: 0.3;
             pointer-events: none;
         }
 
@@ -109,6 +109,21 @@
             0% { background-color: #262626; }
             50% { background-color: #fff; }
             100% { background-color: #262626; }
+        }
+
+        .flash-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            border-radius: 22px;
+            animation: fadeIn 1s ease-out;
         }
 
         .overlay-text {
@@ -125,7 +140,7 @@
         #theme-switch {
             position: absolute;
             bottom: 10px;
-            left: 10px;
+            right: 50px;
             width: 30px;
             height: 15px;
             background-color: #555;
@@ -169,7 +184,7 @@
         .timer.light-theme .buttons button {
             background-color: #dadada;
             color: #757575;
-            opacity: 0.8;
+            opacity: 0.7;
         }
 
         .timer.light-theme #cancel {
@@ -200,14 +215,51 @@
     </div>
 </div>
 
+<div class="flash-overlay" id="overlay" style="display: none;" onclick="stopFlash()">
+    <div class="overlay-text">Click anywhere to stop the timer</div>
+</div>
+
 <script>
     let timer;
     let time = 1500;
     let isRunning = false;
     let adjustTimerInterval;
-    let isDarkTheme = true;
 
-    // Play Sound
+    // Initialize theme from localStorage
+    function initTheme() {
+        const timer = document.getElementById('timer');
+        const themeSwitch = document.getElementById('theme-switch');
+        
+        // Get theme from localStorage, default to dark theme
+        const savedTheme = localStorage.getItem('notionTimerTheme') || 'dark';
+        
+        if (savedTheme === 'light') {
+            timer.classList.add('light-theme');
+            themeSwitch.classList.add('light');
+        } else {
+            timer.classList.remove('light-theme');
+            themeSwitch.classList.remove('light');
+        }
+    }
+
+    // Toggle theme and save to localStorage
+    function toggleTheme() {
+        const timer = document.getElementById('timer');
+        const themeSwitch = document.getElementById('theme-switch');
+        
+        // Toggle theme
+        timer.classList.toggle('light-theme');
+        themeSwitch.classList.toggle('light');
+        
+        // Save to localStorage
+        const isLightTheme = timer.classList.contains('light-theme');
+        localStorage.setItem('notionTimerTheme', isLightTheme ? 'light' : 'dark');
+    }
+
+    // Call initTheme when the page loads
+    document.addEventListener('DOMContentLoaded', initTheme);
+
+    // Rest of the original script remains the same...
     function playAlarmSound() {
         const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -228,15 +280,6 @@
 
         playChime(550, 0.2, 0);
         playChime(550, 0.5, 0.3);
-    }
-
-    function toggleTheme() {
-        const timer = document.getElementById('timer');
-        const themeSwitch = document.getElementById('theme-switch');
-        
-        isDarkTheme = !isDarkTheme;
-        timer.classList.toggle('light-theme');
-        themeSwitch.classList.toggle('light');
     }
 
     function startAdjustTime(seconds) {
