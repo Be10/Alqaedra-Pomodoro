@@ -21,7 +21,7 @@
         .timer {
             width: 180px;
             height: 180px;
-            border-radius: 12px;
+            border-radius: 30px;
             background-color: #262626;
             display: flex;
             flex-direction: column;
@@ -147,15 +147,10 @@
             pointer-events: none;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 0.5; }
-        }
-
         #theme-switch {
             position: absolute;
-            bottom: 10px;
-            left: 10px;
+            bottom: 15px;
+            left: 15px;
             width: 30px;
             height: 15px;
             background-color: #555;
@@ -265,7 +260,8 @@
         <button id="25" onclick="set25min()">25</button>
     </div>
   
-    <div class="display" 
+    <div class="display"
+         title="You can write your time"
          id="timerDisplay" 
          contenteditable="true" 
          spellcheck="false"
@@ -288,7 +284,7 @@
     </div>
   
     <div class="buttons">
-        <div id="theme-switch" onclick="toggleTheme()"></div>
+        <div id="theme-switch" title="Dark / Light" onclick="toggleTheme()"></div>
     </div>
 </div>
 
