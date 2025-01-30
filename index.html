@@ -6,6 +6,8 @@
     <title>Notion Timer</title>
     <link rel="icon" type="image/png" href="src/25.png">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500&display=swap" rel="stylesheet">
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
       
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon/fonts/remixicon.css">
 
@@ -25,7 +27,7 @@
         .timer {
             width: 180px;
             height: 180px;
-            border-radius: 30px;
+            border-radius: 25px;
             background-color: #262626;
             display: flex;
             flex-direction: column;
@@ -36,9 +38,14 @@
         }
 
         .display {
-            font-size: 4.4em;
+            font-size: 4.5em;
             color: #fff;
-            margin-bottom: -5px;
+            
+        }
+      
+        #timerDisplay {
+            margin-top:  6px;
+            margin-bottom: -8px;
         }
    
         .buttons {
@@ -49,7 +56,7 @@
         }
 
         .buttons button {
-            padding: 8px 8px;
+            padding: 8px 10px;
             opacity: 0.5;
             margin-top: 8px;
             margin-bottom: 8px;
@@ -61,6 +68,7 @@
             background-color: #444;
             color: #fff;
             cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
             font-size: 0.9em;
             font-weight: bold;
         }
@@ -91,59 +99,49 @@
         }
       
         #timeOptions {
-            margin-left: -60px;
+            
         }
         
         #start {
-            padding: 8px 4px;
-            color: #fff;
-            border-radius: 30px;
-            font-size: 2em;
-            background-color: transparent;
-            font-weight: normal;
-            margin-left: 5px;
-            margin-right: -2px;
-        }
-      
-        #minusplus {
-            margin-top: -5px;
-            padding: 0px 5px 0px 5px;
             opacity: 0.5;
             transition: opacity 0.3s;
             border: none;
-            border-radius: 10px;
-            font-family: 'Quicksand', sans-serif;
             color: #fff;
             cursor: pointer;
-            font-size: 2.4em;
-        }
-
-        #minusplus:hover {
-            opacity: 0.8;
-        }
-
-        #minusplus:active {
-            opacity: 0.8;
-        }
-
-        #minusplus:disabled {
-            opacity: 0.3;
-            pointer-events: none;
-        }
-
-        #cancel {
-            opacity: 0.3;
-            transition: opacity 0.3s;
-            border: none;
-            border-radius: 10px;
-            color: #fff;
-            cursor: pointer;
-            padding: 8px 4px;
+            width: 45px;
+            height: 45px;
+            padding: 2px 2px; */
             border-radius: 30px;
             font-size: 2em;
             font-weight: normal;
-            margin-right: 5px;
-            margin-left: -2px;
+            margin-right: 2px;
+        }
+      
+        #start:hover {
+            opacity: 0.8;
+        }
+
+        #start:active {
+            opacity: 0.8;
+        }
+
+        #start:disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+      
+        #cancel {
+            opacity: 0.5;
+            transition: opacity 0.3s;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            padding: 2px 2px; */
+            border-radius: 30px;
+            font-size: 2em;
+            margin-left: 2px;
         }
 
         #cancel:hover {
@@ -155,6 +153,39 @@
         }
 
         #cancel:disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+      
+        #minus, #plus {
+            padding: 0px 3px 0px 3px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Quicksand', sans-serif;
+            color: #fff;
+            cursor: pointer;
+            font-size: 2em;
+        }
+      
+        #minus {
+            margin-right: -5px;
+        }
+      
+        #plus {
+            margin-left: -5px;
+        }
+
+        #minus:hover, #plus:hover {
+            opacity: 0.8;
+        }
+
+        #minus:active, #plus:active {
+            opacity: 0.8;
+        }
+
+        #minus:disabled, #plus:disabled {
             opacity: 0.3;
             pointer-events: none;
         }
@@ -176,11 +207,13 @@
         }
         
         .infoMenuContent {
-            margin-top: 2px;
+            margin-top: 3px;
+            margin-left: -3px;
+            margin-right: -3px;
         }
       
         #infoMenu .infoMenuTitle {
-            margin-top: -2px;
+            margin-top: -4px;
             margin-left: 3px;
             font-size: 1.2em;
             opacity: 0.7;
@@ -203,14 +236,14 @@
       
         .infoMenuBar {
           opacity: 0.3;
-          margin-top: -2px;
+          margin-top: 1px;
         }
       
         #infoMenu .infoMenuCredits {
-            margin-top: -4px;
+            margin-top: 11px;
             text-align: center;
             font-size: 0.9em;
-            opacity: 0.8;
+            opacity: 0.6;
         }
       
         @keyframes fadeInOut {
@@ -232,21 +265,22 @@
       
         #toggleButton {
             position: absolute;
-            bottom: 6px;
-            padding: 2px 2px;
+            bottom: 8px;
+            left: 8px;
+            padding: 6px 6px;
             z-index: 1000;
             color: #fff;
             border: none;
             cursor: pointer;
             background-color: transparent;
-            opacity: 0;
             font-weight: bold;
             font-size: 15px;
             transition: opacity 0.3s;
+            opacity: 0.25;
         }
       
-        .timer:hover #toggleButton {
-            opacity: 0.2;
+        #toggleButton:hover {
+            opacity: 0.8;
         }
       
         #toggle-icon {
@@ -259,14 +293,14 @@
       
         #theme-icon {
           position: absolute;
-          bottom: 6px;
-          padding: 2px 2px;
-          left: 75px;
+          bottom: 8px;
+          right: 8px;
+          padding: 6px 6px;
           font-size: 15px;
           cursor: pointer;
           color: #fff;
           transition: transform 0.3s, color 0.3s, opacity 0.3s;
-          opacity: 0;
+          opacity: 0.25;
         }
 
         /* Dark mode hover and click animation */
@@ -284,23 +318,22 @@
           transform: rotate(180deg);
         }
 
-        .timer:hover #theme-icon {
-            opacity: 0.2;
+        #theme-icon:hover {
+            opacity: 1;
         }
-      
       
         /* Color Them Switch */
       
         #color-theme-icon {
           position: absolute;
-          bottom: 6px;
-          padding: 2px 2px;
-          right: 75px;
+          bottom: 8px;
+          right: 8px;
+          padding: 6px 6px;
           font-size: 15px;
           cursor: pointer;
           color: #fff;
           transition: transform 0.3s, color 0.3s, opacity 0.3s;
-          opacity: 0;
+          opacity: 0.3;
         }
 
         /* Color switch hover and click animation */
@@ -318,10 +351,9 @@
           transform: rotate(90deg);
         }
 
-        .timer:hover #color-theme-icon {
-            opacity: 0.2;
-        }
-      
+        #color-theme-icon:hover {
+            opacity: 1;
+        }  
 
         /* Light Theme Styles */
         .timer.light-theme {
@@ -338,31 +370,34 @@
             opacity: 0.7;
         }
 
-        .timer.light-theme #minusplus {
-            #background-color: #dadada;
+        .timer.light-theme #minus, .timer.light-theme #plus {
             color: #757575;
         }
         
         .timer.light-theme #start {
-            color: #000;
-            opacity: 0.4;
+            color: #757575;
+            opacity: 0.6 !important;
         }
       
         .timer.light-theme #start:hover {
-            opacity: 0.5;
+            opacity: 1 !important;
         }
       
         .timer.light-theme #start:disabled {
-            opacity: 0.2;
+            opacity: 0.3 !important;
         }
       
         .timer.light-theme #cancel {
             color: #757575;
-            opacity: 0.4;
+            opacity: 0.6 !important;
         }
       
         .timer.light-theme #cancel:hover {
-            opacity: 1;
+            opacity: 1 !important;
+        }
+      
+        .timer.light-theme #cancel:disabled {
+            opacity: 0.2;
         }
       
         .timer.light-theme button.large {
@@ -399,7 +434,7 @@
         }
         
         .display {
-            font-size: 4.2em;
+            font-size: 4.4em;
             color: #fff;
             cursor: text;
             min-width: 160px;
@@ -418,28 +453,40 @@
         /* Styles for selected time display and delete icon */
         #selectedTimeContainer {
             position: absolute;
-            top: 25px;
-            right: 6px;
+            margin-left: -2px;
+            top: 58px;
             display: flex;
             align-items: center;
             color: #fff;
-            opacity: 0.4;
+            opacity: 0.2;
             font-family: 'Quicksand', sans-serif;
-            font-size: 1em;
+            font-size: 0.85em;
             font-weight: bold;
         }
 
         .timer.light-theme #selectedTimeContainer {
             color: #000;
-            opacity: 0.4;
+            opacity: 0.2;
+        }
+      
+        #selectedTimeIcon {
+            margin-right: 3px;
+        }
+      
+        .timer:hover #selectedTimeIcon {
+            transition: transform 0.3s, opacity 0.3s;
+            transform: rotate(-180deg);
+            opacity: 0;
         }
       
         .timer:hover #deleteSelectedTime {
-            opacity: 0.65;
+            transition: transform 0.3s, opacity 0.3s;
+            transform: rotate(-360deg);
+            opacity: 1;
         }
 
         #deleteSelectedTime {
-            margin-left: 2px;
+            position: absolute;
             cursor: pointer;
             opacity: 0;
             font-weight: normal;
@@ -458,7 +505,7 @@
         }
       
         .timer.light-theme:hover #deleteSelectedTime {
-            opacity: 0.65;
+            opacity: 1;
         }
       
     </style>
@@ -466,31 +513,38 @@
 <body>
 <div class="timer" id="timer">
   
-    <!-- Add new element for selected time display -->
-    <div id="selectedTimeContainer">
-        <div id="selectedTimeDisplay"></div>
-        <i id="deleteSelectedTime" class="ri-delete-bin-2-fill" onclick="clearSelectedTime()"></i>
-    </div>
-  
     <div class="buttons" id="toggleButton"><i id="toggle-icon" class="ri-settings-3-fill"></i></div>
 
     <div id="infoMenu">
       <div class="infoMenuContent">
         <p class="infoMenuTitle"><strong>Set Time</strong></p>
-        <p class="infoMenuText">Tap 05, 15, 25 or <strong class="infoMenuTextBolder">+</strong> or <strong class="infoMenuTextBolder">-</strong> or click to type.</p>
+        <p class="infoMenuText">Tap 05, 15, 25 or + or - or click <i class="bi bi-cursor-text"></i> to type.</p>
       
         <p class="infoMenuTitle"><strong>Start Timer</strong></p>
-        <p class="infoMenuText">Press <strong class="infoMenuTextBolder">Start</strong> or type <strong class="infoMenuTextBolder">Enter</strong> to begin the countdown.</p>
+        <p class="infoMenuText">Press <i class="bi bi-play" style="margin-left:1px;"></i> or type Enter to start the timer.</p>
         
         <p class="infoMenuTitle"><strong>Pause / Reset</strong></p>
-        <p class="infoMenuText">Use <strong class="infoMenuTextBolder">Pause</strong> or <strong class="infoMenuTextBolder">Cancel</strong> to stop / reset.</p>
+        <p class="infoMenuText">Use <i class="bi bi-pause"></i> or <i class="bi bi-x"></i> to stop / reset.</p>
       
-        <p class="infoMenuTitle"><strong>Switch Theme</strong></p>
-        <p class="infoMenuText"><strong class="infoMenuTextBolder">Toggle</strong> between <strong class="infoMenuTextBolder">Themes</strong> by clicking on the button at the bottom left.</p>
+        <p class="infoMenuTitle"><strong>Previous timer</strong></p>
+        <p class="infoMenuText"><i class="ri-history-fill" style="font-size:0.8em;"></i> Displays the last completed timer. Clean it using <i class="ri-delete-bin-2-fill" style="font-size:0.8em;"></i>.</p>
+        
+         <p class="infoMenuTitle"><strong>Switch Theme</strong></p>
+        <p class="infoMenuText">Toggle between Themes with <i class="ri-sun-fill" style="font-size:0.8em;""></i> or <i class="ri-moon-fill" style="font-size:0.8em;""></i>.</p>
       
         <hr class="infoMenuBar" width="95%" size="2">
       
         <div class=infoMenuCredits><p class="infoMenuCredits">All rights reserved by <strong>@alqaedra</strong></p></div>
+       
+        <div id="theme-color-switch" title="Change colors">
+          
+          <!-- Color Switch -->
+          <!-- <i id="color-theme-icon" class="ri-palette-fill" onclick="toggleTheme()"></i> -->
+          
+          <div id="theme-switch" title="Dark / Light"><i id="theme-icon" class="ri-moon-fill" onclick="toggleTheme()"></i></div>
+            
+          </div>
+    
     </div>
     </div>
   
@@ -509,21 +563,27 @@
          onfocus="handleTimerFocus(this)"
          onkeydown="handleKeyPress(event)">25:00</div>
   
-    <div class="buttons" style="margin-top: -5px;">
+    <div class="buttons" id="minusStartCancelPlus">
       
-        <div id="minusplus" onmousedown="startAdjustTime(-60)" onmouseup="stopAdjustTime()" class="large">-</div>
+        <div id="minus" onmousedown="startAdjustTime(-60)" onmouseup="stopAdjustTime()" class="large"><i class="bi bi-dash"></i></div>
       
-        <button id="start" onclick="toggleTimer()" class="large"><i class="ri-play-large-line"></i></button>
+        <button id="start" onclick="toggleTimer()"><i class="bi bi-play" style="margin-left: 2px;"></i></button>
       
-        <div id="cancel" onclick="cancelTimer()"><i class="ri-close-large-fill"></i></div>
+        <button id="cancel" onclick="cancelTimer()"><i class="bi bi-x"></i></button>
       
-        <div id="minusplus" onmousedown="startAdjustTime(60)" onmouseup="stopAdjustTime()" class="large">+</div>
+        <div id="plus" onmousedown="startAdjustTime(60)" onmouseup="stopAdjustTime()" class="large"><i class="bi bi-plus"></i></div>
       
+    </div>
+    
+    <!-- Add new element for selected time display -->
+    <div id="selectedTimeContainer">
+      <i id="selectedTimeIcon" class="ri-history-fill"></i>
+      <div id="selectedTimeDisplay"></div>
+      <i id="deleteSelectedTime" class="ri-delete-bin-2-fill" onclick="clearSelectedTime()"></i>
     </div>
   
     <div class="buttons">
         <div id="theme-switch" title="Dark / Light"><i id="theme-icon" class="ri-moon-fill" onclick="toggleTheme()"></i></div>
-        <div id="theme-color-switch" title="Change colors"><i id="color-theme-icon" class="ri-palette-fill" onclick="toggleTheme()"></i></div>
     </div>
   
 </div>
@@ -626,11 +686,11 @@ document.addEventListener('DOMContentLoaded', initTheme);
         if (!isRunning) {
             isRunning = true;
             timer = setInterval(updateTimer, 1000);
-            document.getElementById('start').innerHTML = '<i class="ri-pause-large-fill"></i>';
+            document.getElementById('start').innerHTML = '<i class="bi bi-pause"></i>';
         } else {
             isRunning = false;
             clearInterval(timer);
-            document.getElementById('start').innerHTML = '<i class="ri-play-large-line"></i>';
+            document.getElementById('start').innerHTML = '<i class="bi bi-play" style="margin-left: 2px;"></i>';
         }
     }
 
@@ -639,7 +699,7 @@ document.addEventListener('DOMContentLoaded', initTheme);
         time = 0;
         isRunning = false;
         document.getElementById('timerDisplay').innerText = formatTime(time);
-        document.getElementById('start').innerHTML = '<i class="ri-play-large-line"></i>';
+        document.getElementById('start').innerHTML = '<i class="bi bi-play" style="margin-left: 2px;"></i>';
         document.getElementById('start').setAttribute('disabled', 'disabled');
     }
 
@@ -650,9 +710,10 @@ document.addEventListener('DOMContentLoaded', initTheme);
         } else if (time === 0) {
             clearInterval(timer);
             isRunning = false;
-            document.getElementById('start').innerHTML = '<i class="ri-play-large-line"></i>';
+            document.getElementById('start').innerHTML = '<i class="bi bi-play" style="margin-left: 2px;"></i>';
             playAlarmSound();
             document.getElementById('start').setAttribute('disabled', 'disabled');
+  document.getElementById('timerDisplay').setAttribute('contenteditable', 'true');
         }
     }
 
@@ -757,12 +818,12 @@ document.addEventListener('DOMContentLoaded', initTheme);
         if (!isRunning) {
             isRunning = true;
             timer = setInterval(updateTimer, 1000);
-            document.getElementById('start').innerHTML = '<i class="ri-pause-large-fill"></i>';
+            document.getElementById('start').innerHTML = '<i class="bi bi-pause"></i>';
             document.getElementById('timerDisplay').setAttribute('contenteditable', 'false');
         } else {
             isRunning = false;
             clearInterval(timer);
-            document.getElementById('start').innerHTML = '<i class="ri-play-large-line"></i>';
+            document.getElementById('start').innerHTML = '<i class="bi bi-play" style="margin-left: 2px;"></i>';
             document.getElementById('timerDisplay').setAttribute('contenteditable', 'true');
         }
     }
@@ -773,7 +834,7 @@ document.addEventListener('DOMContentLoaded', initTheme);
         time = 0;
         isRunning = false;
         document.getElementById('timerDisplay').innerText = formatTime(time);
-        document.getElementById('start').innerHTML = '<i class="ri-play-large-line"></i>';
+        document.getElementById('start').innerHTML = '<i class="bi bi-play" style="margin-left: 2px;"></i>';
         document.getElementById('start').setAttribute('disabled', 'disabled');
         document.getElementById('timerDisplay').setAttribute('contenteditable', 'true');
     }
@@ -854,6 +915,9 @@ document.addEventListener('DOMContentLoaded', initTheme);
     function clearSelectedTime() {
         const selectedTimeDisplay = document.getElementById('selectedTimeDisplay');
         selectedTimeDisplay.textContent = '00:00';
+        time = 00;
+        document.getElementById('timerDisplay').innerText = formatTime(time);
+        document.getElementById('start').setAttribute('disabled', 'disabled');
     }
 
 </script>
