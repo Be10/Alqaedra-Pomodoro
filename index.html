@@ -589,6 +589,40 @@
 </div>
 
 <script>
+  
+    document.addEventListener('DOMContentLoaded', function() {
+            // Verificar si el navegador soporta Service Workers y Notificaciones
+            if ('serviceWorker' in navigator && 'Notification' in window) {
+                // Solicitar permiso para notificaciones
+                Notification.requestPermission();
+                
+                // Registrar el Service Worker
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(function(registration) {
+                        console.log('Service Worker registrado con éxito:', registration.scope);
+                    })
+                    .catch(function(error) {
+                        console.error('Error al registrar el Service Worker:', error);
+                    });
+            }
+        });
+  
+    // Solicitar permiso para notificaciones
+        if ('Notification' in window) {
+            Notification.requestPermission();
+        }
+
+        // Registrar Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js')
+                .then(function(registration) {
+                    console.log('Service Worker registrado con éxito:', registration.scope);
+                })
+                .catch(function(error) {
+                    console.log('Registro de Service Worker fallido:', error);
+                });
+        }
+  
         // Función para mostrar/ocultar el div
        document.getElementById('toggleButton').addEventListener('click', function() {
             var infoMenu = document.getElementById('infoMenu');
@@ -598,14 +632,12 @@
                 infoMenu.style.display = 'none';
             }
         });
-</script>  
-  
-<script>
     
     let timer;
     let time = 1500;
     let isRunning = false;
     let adjustTimerInterval;
+    let startTimestamp = 0;
 
     function toggleTheme() {
     const timer = document.getElementById('timer');
@@ -670,6 +702,83 @@ document.addEventListener('DOMContentLoaded', initTheme);
         playChime(550, 0.2, 0);
         playChime(550, 0.5, 0.3);
     }
+  
+    // Función para guardar el estado del temporizador
+        function saveTimerState() {
+            if (isRunning) {
+                localStorage.setItem('timerState', JSON.stringify({
+                    time: time,
+                    startTimestamp: startTimestamp,
+                    isRunning: isRunning
+                }));
+            }
+        }
+
+        // Función para cargar el estado del temporizador
+        function loadTimerState() {
+            const savedState = localStorage.getItem('timerState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                if (state.isRunning) {
+                    const elapsedTime = Math.floor((Date.now() - state.startTimestamp) / 1000);
+                    time = Math.max(state.time - elapsedTime, 0);
+
+                    if (time > 0) {
+                        startBackgroundTimer();
+                    } else {
+                        handleTimerCompletion();
+                    }
+                }
+            }
+        }
+
+        // Función para iniciar temporizador en segundo plano
+        function startBackgroundTimer() {
+            isRunning = true;
+            startTimestamp = Date.now() - ((1500 - time) * 1000);
+            
+            // Limpiar cualquier intervalo existente
+            clearInterval(timer);
+            
+            timer = setInterval(() => {
+                const elapsedTime = Math.floor((Date.now() - startTimestamp) / 1000);
+                time = Math.max(1500 - elapsedTime, 0);
+
+                document.getElementById('timerDisplay').innerText = formatTime(time);
+
+                saveTimerState();
+
+                if (time <= 0) {
+                    handleTimerCompletion();
+                }
+            }, 1000);
+
+            document.getElementById('start').innerHTML = '<i class="bi bi-pause"></i>';
+            document.getElementById('timerDisplay').setAttribute('contenteditable', 'false');
+        }
+
+        // Función para manejar la finalización del temporizador
+        function handleTimerCompletion() {
+            clearInterval(timer);
+            isRunning = false;
+            time = 0;
+            
+            document.getElementById('timerDisplay').innerText = formatTime(time);
+            document.getElementById('start').innerHTML = '<i class="bi bi-play" style="margin-left: 2px;"></i>';
+            document.getElementById('start').setAttribute('disabled', 'disabled');
+            document.getElementById('timerDisplay').setAttribute('contenteditable', 'true');
+            
+            // Mostrar notificación
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Pomodoro Timer', {
+                    body: '¡Tu tiempo ha terminado!',
+                    icon: 'src/25.png'
+                });
+            }
+
+            playAlarmSound();
+            localStorage.removeItem('timerState');
+        }
 
     function startAdjustTime(seconds) {
         adjustTime(seconds);
@@ -682,17 +791,18 @@ document.addEventListener('DOMContentLoaded', initTheme);
         clearInterval(adjustTimerInterval);
     }
 
-    function toggleTimer() {
-        if (!isRunning) {
-            isRunning = true;
-            timer = setInterval(updateTimer, 1000);
-            document.getElementById('start').innerHTML = '<i class="bi bi-pause"></i>';
-        } else {
-            isRunning = false;
-            clearInterval(timer);
-            document.getElementById('start').innerHTML = '<i class="bi bi-play" style="margin-left: 2px;"></i>';
+    // Modificar toggleTimer para usar startBackgroundTimer
+        function toggleTimer() {
+            if (!isRunning) {
+                startTimestamp = Date.now();
+                startBackgroundTimer();
+            } else {
+                isRunning = false;
+                clearInterval(timer);
+                document.getElementById('start').innerHTML = '<i class="bi bi-play" style="margin-left: 2px;"></i>';
+                document.getElementById('timerDisplay').setAttribute('contenteditable', 'true');
+            }
         }
-    }
 
     function cancelTimer() {
         clearInterval(timer);
@@ -919,6 +1029,16 @@ document.addEventListener('DOMContentLoaded', initTheme);
         document.getElementById('timerDisplay').innerText = formatTime(time);
         document.getElementById('start').setAttribute('disabled', 'disabled');
     }
+  
+    // Al cargar la página, intentar cargar estado guardado
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTimerState();
+            initTheme();
+            updateSelectedTimeDisplay('25:00');
+        });
+
+        // Evento para guardar estado antes de cerrar/recargar
+        window.addEventListener('beforeunload', saveTimerState);
 
 </script>
 </body>
